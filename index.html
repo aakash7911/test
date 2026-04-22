@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPortal | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Aapka original CSS yahan hai (Maine koi change nahi kiya) */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at top left, #1e293b, #0f172a); color: #f8fafc; }
+        .brand-logo { margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .logo-icon { width: 40px; height: 40px; background: #38bdf8; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; }
+        .login-card { width: 420px; background: #1e293b; padding: 40px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .header-text { text-align: center; margin-bottom: 30px; }
+        .header-text h2 { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; }
+        .header-text p { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
+        .input-label { display: block; font-size: 0.85rem; margin-bottom: 8px; color: #cbd5e1; font-weight: 500; }
+        .input-wrapper { margin-bottom: 20px; }
+        .input-wrapper input { width: 100%; padding: 12px 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; font-size: 0.95rem; outline: none; transition: all 0.3s ease; }
+        .input-wrapper input:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+        .btn-primary { width: 100%; padding: 12px; background: #38bdf8; color: #0f172a; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-primary:hover { background: #7dd3fc; transform: translateY(-1px); }
+        .divider { margin: 20px 0; display: flex; align-items: center; color: #475569; font-size: 0.8rem; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #334155; }
+        .divider span { padding: 0 10px; }
+        .btn-secondary { width: 100%; padding: 10px; background: transparent; border: 1px solid #334155; color: #f1f5f9; border-radius: 8px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
+        .btn-secondary:hover { background: #334155; }
+        .error-msg { color: #ef4444; font-size: 0.85rem; text-align: center; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="brand-logo">
+            <div class="logo-icon">JP</div>
+            <h1 style="font-size: 1.2rem; color: #38bdf8;">JobPortal</h1>
+        </div>
+
+        <div class="header-text">
+            <h2>Welcome Back!</h2>
+            <p>Find your dream job today.</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-wrapper">
+                <label class="input-label">Email Address</label>
+                <input type="email" id="email" value="test@company.com" required>
+            </div>
+
+            <div class="input-wrapper">
+                <label class="input-label">Password</label>
+                <input type="password" id="password" value="123456" required>
+            </div>
+
+            <button type="submit" class="btn-primary" id="loginBtn">Sign In</button>
+            <p class="error-msg" id="errorMsg">Invalid email or password.</p>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <button type="button" class="btn-secondary">
+                <img src="https://www.svgrepo.com/show/355037/google.svg" width="18" alt="G">
+                Continue with Google
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Real Backend Connection Logic
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Page refresh hone se rokne ke liye
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const loginBtn = document.getElementById('loginBtn');
+
+            loginBtn.innerText = "Signing in...";
+
+            try {
+                // Backend ko request bhej rahe hain
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Login successful! Token save karo aur dashboard par bhejo
+                    localStorage.setItem('userToken', data.token);
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Login failed
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = data.message;
+                    loginBtn.innerText = "Sign In";
+                }
+            } catch (error) {
+                console.error("Backend connect nahi ho paaya:", error);
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = "Server is down. Please start the backend.";
+                loginBtn.innerText = "Sign In";
+            }
+        });
+    </script>
+</body>
+</html>
