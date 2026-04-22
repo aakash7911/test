@@ -3,295 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobGram | Profile</title>
+    <title>JobGram | Live App</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
-        /* Desktop par Mobile View jaisa dikhane ke liye */
-        body { 
-            background: #121212; 
-            color: #fafafa; 
-            display: flex; 
-            justify-content: center; 
-            min-height: 100vh;
-        }
+        body { background: #121212; color: #fafafa; display: flex; justify-content: center; min-height: 100vh; }
 
         #app-container {
-            width: 100%;
-            max-width: 480px; /* Mobile screen ki width */
-            background: #000000; /* Pure black for IG feel */
-            min-height: 100vh;
-            border-left: 1px solid #262626;
-            border-right: 1px solid #262626;
-            position: relative;
-            padding-bottom: 70px; /* Bottom nav ke liye jagah */
+            width: 100%; max-width: 480px; background: #000000; min-height: 100vh;
+            border-left: 1px solid #262626; border-right: 1px solid #262626;
+            position: relative; display: flex; flex-direction: column;
         }
 
-        /* Top Navigation */
+        /* --- Top Navigation --- */
         .top-nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #262626;
-            position: sticky; top: 0; background: #000; z-index: 10;
+            padding: 15px 20px; border-bottom: 1px solid #262626;
+            position: sticky; top: 0; background: #000; z-index: 50;
         }
-        .top-nav .username { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
-        .top-nav .icons { display: flex; gap: 20px; }
+        .header-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .small-avatar { width: 35px; height: 35px; border-radius: 50%; background: #262626; display: flex; justify-content: center; align-items: center; font-weight: bold; color: #fff; border: 2px solid #38bdf8; }
+        .brand-name { font-size: 1.2rem; font-weight: 700; color: #fff; }
+        .qr-btn { background: rgba(56, 189, 248, 0.15); padding: 8px; border-radius: 8px; color: #38bdf8; cursor: pointer; transition: 0.2s; }
+        .qr-btn:hover { background: #38bdf8; color: #000; }
 
-        /* Profile Header (Avatar + Stats) */
-        .profile-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 20px 10px;
-        }
-        .avatar-container {
-            position: relative;
-            width: 86px; height: 86px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            display: flex; justify-content: center; align-items: center;
-        }
-        .avatar {
-            width: 80px; height: 80px;
-            border-radius: 50%; border: 3px solid #000;
-            background: #262626; display: flex; justify-content: center; align-items: center;
-            font-size: 2rem; font-weight: 700; color: #fff;
-        }
-        .stats { display: flex; gap: 25px; text-align: center; }
-        .stat-item h3 { font-size: 1.1rem; font-weight: 700; }
-        .stat-item p { font-size: 0.85rem; color: #a8a8a8; margin-top: -2px; }
+        /* --- Main Content Area --- */
+        .main-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        .view-section { display: none; padding: 20px; }
+        .view-section.active { display: block; }
 
-        /* Bio Section */
-        .bio-section { padding: 0 20px 15px; font-size: 0.95rem; line-height: 1.4; }
-        .bio-section .name { font-weight: 700; margin-bottom: 2px; }
-        .bio-section .category { color: #a8a8a8; font-size: 0.85rem; margin-bottom: 4px; }
-        .bio-section .description a { color: #38bdf8; text-decoration: none; }
+        /* General UI Elements */
+        .loading-text { text-align: center; color: #a8a8a8; margin-top: 50px; font-size: 0.9rem; }
+        .empty-state { text-align: center; margin-top: 40px; color: #a8a8a8; padding: 20px; background: #1a1a1a; border-radius: 12px; }
+        
+        /* Map Section Specifics */
+        .map-search-bar { display: flex; align-items: center; background: #262626; padding: 12px 15px; border-radius: 10px; margin-bottom: 20px; }
+        .map-search-bar input { background: transparent; border: none; outline: none; color: white; width: 100%; margin-left: 10px; font-size: 1rem; }
+        
+        /* My Data Specifics */
+        .data-tabs { display: flex; background: #1a1a1a; border-radius: 10px; padding: 5px; margin-bottom: 20px; }
+        .data-tab { flex: 1; text-align: center; padding: 10px; border-radius: 8px; color: #a8a8a8; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .data-tab.active { background: #38bdf8; color: #000; }
+        .history-list { display: flex; flex-direction: column; gap: 10px; }
+        .history-card { background: #1a1a1a; padding: 15px; border-radius: 10px; border-left: 4px solid #38bdf8; }
 
-        /* Action Buttons */
-        .action-buttons { display: flex; gap: 10px; padding: 0 20px 20px; }
-        .btn {
-            flex: 1; padding: 8px 0; border-radius: 8px;
-            background: #262626; color: #fff; border: none;
-            font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
-        }
-        .btn:hover { background: #333; }
-        .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
-        .btn-logout:hover { background: #ef4444; color: #fff; }
-
-        /* Highlights / Stories */
-        .highlights {
-            display: flex; gap: 15px; padding: 0 20px 20px;
-            overflow-x: auto; border-bottom: 1px solid #262626;
-        }
-        .highlights::-webkit-scrollbar { display: none; }
-        .highlight-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .highlight-circle {
-            width: 64px; height: 64px; border-radius: 50%; border: 1px solid #404040;
-            background: #1a1a1a; display: flex; justify-content: center; align-items: center;
-        }
-        .highlight-text { font-size: 0.75rem; }
-
-        /* Content Tabs */
-        .tabs { display: flex; border-bottom: 1px solid #262626; }
-        .tab { 
-            flex: 1; text-align: center; padding: 12px 0; cursor: pointer; 
-            color: #a8a8a8; transition: 0.2s; 
-            display: flex; justify-content: center; align-items: center;
-        }
-        .tab.active { color: #fff; border-bottom: 2px solid #fff; }
-
-        /* Job Feed Grid */
-        .feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-        .grid-item { aspect-ratio: 1; background: #262626; display: flex; justify-content: center; align-items: center; color: #a8a8a8; font-size: 0.8rem; flex-direction: column; gap: 5px;}
-        .grid-item:hover { background: #333; cursor: pointer; }
-
-        /* Bottom Navigation (Aapke Order Mein) */
+        /* --- Bottom Navigation --- */
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; max-width: 480px;
             background: #000; border-top: 1px solid #262626;
             display: flex; justify-content: space-around; padding: 12px 5px; z-index: 100;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            cursor: pointer; color: #a8a8a8; transition: 0.2s; text-decoration: none; flex: 1;
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: #a8a8a8; transition: 0.2s; }
         .nav-item.active { color: #fff; }
         .nav-item span { font-size: 0.65rem; font-weight: 500; text-align: center; }
-        .nav-item:hover { color: #fff; transform: translateY(-2px); }
 
-        /* Loader */
-        #loader { text-align: center; margin-top: 50px; color: #a8a8a8; }
-        #dashboardContent { display: none; }
+        /* QR Scanner Modal overlay */
+        #qrModal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; justify-content: center; align-items: center; flex-direction: column; }
+        .qr-box { width: 250px; height: 250px; border: 2px dashed #38bdf8; display: flex; justify-content: center; align-items: center; color: #fff; margin-bottom: 20px;}
+        .close-btn { padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;}
     </style>
 </head>
 <body>
 
+    <div id="qrModal">
+        <h2>Scan Company QR</h2>
+        <p style="color: #a8a8a8; margin-bottom: 20px; font-size: 0.9rem;">Punch In / Punch Out</p>
+        <div class="qr-box">
+            <i data-lucide="scan-line" size="50" style="color: #38bdf8;"></i>
+        </div>
+        <p id="qrStatus" style="margin-bottom: 20px; color: #10b981;"></p>
+        <button class="close-btn" onclick="closeScanner()">Cancel</button>
+    </div>
+
     <div id="app-container">
-        <div id="loader">Loading your profile...</div>
-
-        <div id="dashboardContent">
-            <div class="top-nav">
-                <div class="username">
-                    <i data-lucide="lock" style="width: 14px; margin-right: 5px;"></i>
-                    <span id="navUsername">username</span>
-                    <i data-lucide="chevron-down" style="width: 16px;"></i>
-                </div>
-                <div class="icons">
-                    <i data-lucide="plus-square"></i>
-                    <i data-lucide="menu"></i>
-                </div>
+        <header class="top-nav">
+            <div class="header-profile" onclick="switchTab('profile')">
+                <div class="small-avatar" id="navAvatar">?</div>
             </div>
+            
+            <div class="brand-name">JobGram</div>
 
-            <div class="profile-header">
-                <div class="avatar-container">
-                    <div class="avatar" id="userInitial">?</div>
-                </div>
-                <div class="stats">
-                    <div class="stat-item">
-                        <h3 id="appliedJobs">0</h3>
-                        <p>Applied</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3 id="profileViews">0</h3>
-                        <p>Views</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3 id="savedJobs">0</h3>
-                        <p>Saved</p>
-                    </div>
-                </div>
+            <div class="qr-btn" onclick="openScanner()">
+                <i data-lucide="qr-code"></i>
             </div>
+        </header>
 
-            <div class="bio-section">
-                <div class="name" id="userName">User Name</div>
-                <div class="category" id="userRole">Professional Role</div>
-                <div class="description">
-                    📍 <span id="userLocation">Location</span><br>
-                    ✉️ <span id="userEmail">email@example.com</span><br>
-                    Ready for new opportunities! 🚀<br>
-                    <a href="#">linktr.ee/portfolio</a>
+        <main class="main-content">
+            
+            <section id="view-profile" class="view-section">
+                <h2 style="margin-bottom: 20px; text-align: center;">My Profile</h2>
+                <div class="empty-state">
+                    <h3 id="userName">Loading...</h3>
+                    <p id="userRole" style="color: #38bdf8; margin-bottom: 15px;">Role</p>
+                    <p>📍 <span id="userLocation">Location</span></p>
+                    <p>✉️ <span id="userEmail">Email</span></p>
+                    <button onclick="logout()" style="width: 100%; margin-top: 20px; padding: 10px; background: transparent; border: 1px solid #ef4444; color: #ef4444; border-radius: 8px;">Logout</button>
                 </div>
-            </div>
+            </section>
 
-            <div class="action-buttons">
-                <button class="btn">Edit profile</button>
-                <button class="btn">Share profile</button>
-                <button class="btn btn-logout" onclick="logout()">Logout</button>
-            </div>
+            <section id="view-explore" class="view-section active">
+                <h2 style="margin-bottom: 15px;">Explore World</h2>
+                <div id="explore-content" class="loading-text">Loading latest local news & trends...</div>
+            </section>
 
-            <div class="highlights">
-                <div class="highlight-item">
-                    <div class="highlight-circle"><i data-lucide="building"></i></div>
-                    <div class="highlight-text">MNCs</div>
+            <section id="view-permanent" class="view-section">
+                <h2 style="margin-bottom: 15px;">Permanent Roles</h2>
+                <div id="permanent-content" class="loading-text">Fetching permanent jobs...</div>
+            </section>
+
+            <section id="view-adhoc" class="view-section">
+                <h2 style="margin-bottom: 15px;">Adhoc & Freelance</h2>
+                <div id="adhoc-content" class="loading-text">Fetching adhoc tasks...</div>
+            </section>
+
+            <section id="view-map" class="view-section">
+                <div class="map-search-bar">
+                    <i data-lucide="search" size="20" color="#a8a8a8"></i>
+                    <input type="text" id="mapSearchInput" placeholder="Enter job location to navigate...">
                 </div>
-                <div class="highlight-item">
-                    <div class="highlight-circle"><i data-lucide="code"></i></div>
-                    <div class="highlight-text">Projects</div>
+                <div id="map-content" class="empty-state">
+                    <i data-lucide="map" size="40" style="margin-bottom: 10px; color: #38bdf8;"></i>
+                    <p>Map view will load here from Backend.</p>
                 </div>
-                <div class="highlight-item">
-                    <div class="highlight-circle"><i data-lucide="award"></i></div>
-                    <div class="highlight-text">Skills</div>
+            </section>
+
+            <section id="view-mydata" class="view-section">
+                <h2 style="margin-bottom: 15px;">My Work History</h2>
+                <div class="data-tabs">
+                    <div class="data-tab active" onclick="loadWorkHistory('adhoc', this)">Adhoc Data</div>
+                    <div class="data-tab" onclick="loadWorkHistory('permanent', this)">Permanent Data</div>
                 </div>
-                <div class="highlight-item">
-                    <div class="highlight-circle" style="background: #262626; border: none;">
-                        <i data-lucide="plus"></i>
-                    </div>
-                    <div class="highlight-text">New</div>
+                <div id="mydata-content" class="history-list">
+                    <div class="loading-text">Loading history...</div>
                 </div>
+            </section>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('explore', this)">
+                <i data-lucide="compass"></i><span>Explore</span>
             </div>
-
-            <div class="tabs">
-                <div class="tab active"><i data-lucide="grid"></i></div>
-                <div class="tab"><i data-lucide="bookmark"></i></div>
-                <div class="tab"><i data-lucide="user-square"></i></div>
+            <div class="nav-item" onclick="switchTab('permanent', this)">
+                <i data-lucide="briefcase"></i><span>Permanent</span>
             </div>
-
-            <div class="feed-grid">
-                <div class="grid-item"><i data-lucide="code-2"></i><span>Frontend</span></div>
-                <div class="grid-item"><i data-lucide="server"></i><span>Backend</span></div>
-                <div class="grid-item"><i data-lucide="smartphone"></i><span>App Dev</span></div>
-                <div class="grid-item"><i data-lucide="database"></i><span>DB Admin</span></div>
-                <div class="grid-item"><i data-lucide="layout"></i><span>UI/UX</span></div>
-                <div class="grid-item"><i data-lucide="file-json"></i><span>API</span></div>
+            <div class="nav-item" onclick="switchTab('adhoc', this)">
+                <i data-lucide="zap"></i><span>Adhoc</span>
             </div>
-        </div>
-
-        <div class="bottom-nav">
-            <a href="#" class="nav-item">
-                <i data-lucide="compass"></i>
-                <span>Explore</span>
-            </a>
-
-            <a href="#" class="nav-item">
-                <i data-lucide="briefcase"></i>
-                <span>Permanent</span>
-            </a>
-
-            <a href="#" class="nav-item">
-                <i data-lucide="zap"></i>
-                <span>Adhoc</span>
-            </a>
-
-            <a href="#" class="nav-item" style="color: #38bdf8;">
-                <i data-lucide="map-pin"></i>
-                <span>Go to Job</span>
-            </a>
-
-            <a href="#" class="nav-item active">
-                <i data-lucide="database"></i>
-                <span>My Data</span>
-            </a>
-        </div>
+            <div class="nav-item" onclick="switchTab('map', this)" style="color: #38bdf8;">
+                <i data-lucide="map-pin"></i><span>Go to Job</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('mydata', this)">
+                <i data-lucide="database"></i><span>My Data</span>
+            </div>
+        </nav>
     </div>
 
     <script>
-        // Initialize Icons
         lucide.createIcons();
 
-        // 🔴 Asli Live Render Backend ka Link
+        // --- GLOBAL CONFIG ---
         const BACKEND_URL = "https://faa-qep3.onrender.com"; 
-        
-        // Security Check
         const token = localStorage.getItem('userToken');
-        if (!token) {
-            window.location.href = 'index.html'; 
-        }
+        
+        if (!token) { window.location.href = 'index.html'; }
 
-        async function fetchUserData() {
+        // --- AUTH & PROFILE DATA FETCH ---
+        async function fetchUserProfile() {
             try {
-                const response = await fetch(`${BACKEND_URL}/api/profile`, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-
-                const data = await response.json();
-
+                const res = await fetch(`${BACKEND_URL}/api/profile`, { headers: { 'Authorization': `Bearer ${token}` }});
+                const data = await res.json();
                 if (data.success) {
-                    const user = data.user;
-                    
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('dashboardContent').style.display = 'block';
-
-                    const igUsername = user.name.toLowerCase().replace(/\s+/g, '_') + '_official';
-                    document.getElementById('navUsername').innerText = igUsername;
-                    
-                    document.getElementById('userName').innerText = user.name;
-                    document.getElementById('userEmail').innerText = user.email;
-                    document.getElementById('userLocation').innerText = user.location;
-                    document.getElementById('userRole').innerText = user.role;
-                    
-                    const initial = user.name.charAt(0).toUpperCase();
-                    document.getElementById('userInitial').innerText = initial;
-                    
-                    document.getElementById('appliedJobs').innerText = user.stats.applied;
-                    document.getElementById('profileViews').innerText = user.stats.views;
-                    document.getElementById('savedJobs').innerText = user.stats.saved;
+                    // Set Profile Details
+                    document.getElementById('navAvatar').innerText = data.user.name.charAt(0).toUpperCase();
+                    document.getElementById('userName').innerText = data.user.name;
+                    document.getElementById('userRole').innerText = data.user.role;
+                    document.getElementById('userLocation').innerText = data.user.location;
+                    document.getElementById('userEmail').innerText = data.user.email;
                 } else {
                     logout();
                 }
-            } catch (error) {
-                console.error("Data load failed:", error);
-                document.getElementById('loader').innerText = "Network Error. Please refresh.";
+            } catch(e) { console.error(e); }
+        }
+
+        // --- TAB SWITCHER LOGIC ---
+        function switchTab(tabName, navElement = null) {
+            // Hide all sections
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            // Show target section
+            document.getElementById(`view-${tabName}`).classList.add('active');
+
+            // Manage Bottom Nav active state (if clicked from bottom nav)
+            if(navElement) {
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                navElement.classList.add('active');
+            } else {
+                // If profile is clicked, remove highlight from bottom nav
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            }
+
+            // Trigger API based on tab
+            if(tabName === 'explore') loadExploreAPI();
+            if(tabName === 'permanent') loadPermanentAPI();
+            if(tabName === 'adhoc') loadAdhocAPI();
+            if(tabName === 'map') loadMapAPI();
+            if(tabName === 'mydata') loadWorkHistory('adhoc', document.querySelector('.data-tab')); // Default adhoc
+        }
+
+        // --- API CALL STUBS FOR EACH VIEW ---
+
+        async function loadExploreAPI() {
+            const container = document.getElementById('explore-content');
+            container.innerHTML = `<div class="loading-text">Fetching news from world APIs...</div>`;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/news`, { headers: { 'Authorization': `Bearer ${token}` }});
+                // Fake delay to show real loading feel since backend route doesn't exist yet
+                setTimeout(() => {
+                    container.innerHTML = `<div class="empty-state">No local news found currently. Check back later!</div>`;
+                }, 800);
+            } catch(e) { container.innerHTML = `<div class="empty-state">Failed to connect to News API.</div>`; }
+        }
+
+        async function loadPermanentAPI() {
+            const container = document.getElementById('permanent-content');
+            container.innerHTML = `<div class="loading-text">Checking for Admin posted permanent roles...</div>`;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/jobs/permanent`);
+                setTimeout(() => {
+                    container.innerHTML = `<div class="empty-state">No Permanent Jobs posted by Admin right now.</div>`;
+                }, 800);
+            } catch(e) { container.innerHTML = `<div class="empty-state">Error fetching jobs.</div>`; }
+        }
+
+        async function loadAdhocAPI() {
+            const container = document.getElementById('adhoc-content');
+            container.innerHTML = `<div class="loading-text">Checking for Adhoc shifts...</div>`;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/jobs/adhoc`);
+                setTimeout(() => {
+                    container.innerHTML = `<div class="empty-state">No Adhoc tasks available right now.</div>`;
+                }, 800);
+            } catch(e) { container.innerHTML = `<div class="empty-state">Error fetching jobs.</div>`; }
+        }
+
+        async function loadMapAPI() {
+            // Map integration will happen here
+            console.log("Map API Triggered");
+        }
+
+        async function loadWorkHistory(type, tabElement) {
+            // Manage UI Tabs for My Data
+            document.querySelectorAll('.data-tab').forEach(el => el.classList.remove('active'));
+            tabElement.classList.add('active');
+
+            const container = document.getElementById('mydata-content');
+            container.innerHTML = `<div class="loading-text">Fetching ${type} history from database...</div>`;
+            
+            // Hit backend for Work History
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/userdata/history?type=${type}`, { headers: { 'Authorization': `Bearer ${token}` }});
+                setTimeout(() => {
+                    if(type === 'adhoc') {
+                        container.innerHTML = `
+                            <div class="empty-state">No Adhoc punches found. Scan QR at site to log attendance.</div>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <div class="empty-state">No Permanent job records found.</div>
+                        `;
+                    }
+                }, 600);
+            } catch(e) { container.innerHTML = `<div class="empty-state">Failed to load data.</div>`; }
+        }
+
+        // --- QR SCANNER LOGIC ---
+        function openScanner() {
+            document.getElementById('qrModal').style.display = 'flex';
+            document.getElementById('qrStatus').innerText = "Simulating Scanner Camera...";
+            
+            // Real life me yahan JS QR Library (jaise html5-qrcode) start hogi
+            // Abhi ke liye hum Backend Punch API call ko simulate kar rahe hain
+            setTimeout(() => {
+                punchAttendance("fake-qr-data-123");
+            }, 2000);
+        }
+
+        function closeScanner() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+
+        async function punchAttendance(qrData) {
+            document.getElementById('qrStatus').innerText = "Verifying with Admin Database...";
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/punch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ qr_code: qrData })
+                });
+                
+                // Assuming backend isn't ready, we show a fail-safe message
+                setTimeout(() => {
+                    document.getElementById('qrStatus').innerText = "QR Code not recognized by Admin.";
+                    document.getElementById('qrStatus').style.color = "#ef4444";
+                }, 1000);
+
+            } catch(e) {
+                document.getElementById('qrStatus').innerText = "Failed to connect to punching server.";
+                document.getElementById('qrStatus').style.color = "#ef4444";
             }
         }
 
@@ -300,7 +320,9 @@
             window.location.href = 'index.html';
         }
 
-        fetchUserData();
+        // Boot App
+        fetchUserProfile();
+        loadExploreAPI(); // Load default tab
     </script>
 </body>
 </html>
