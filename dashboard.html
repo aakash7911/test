@@ -91,7 +91,7 @@
         // Fetch User Data from Backend
         async function fetchUserData() {
             try {
-                const response = await fetch('https://faa-qep3.onrender.com/', {
+                const response = await fetch('https://faa-qep3.onrender.com/api/profile', {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
