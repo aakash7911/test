@@ -3,165 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobGram | Pro Profile</title>
+    <title>JobGram | Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
+        /* Desktop par Mobile View jaisa dikhane ke liye */
         body { 
-            background: #000000; 
+            background: #121212; 
             color: #fafafa; 
+            display: flex; 
+            justify-content: center; 
             min-height: 100vh;
         }
 
-        /* --- 1. Top Header --- */
-        .top-header {
+        #app-container {
+            width: 100%;
+            max-width: 480px; /* Mobile screen ki width */
+            background: #000000; /* Pure black for IG feel */
+            min-height: 100vh;
+            border-left: 1px solid #262626;
+            border-right: 1px solid #262626;
+            position: relative;
+            padding-bottom: 70px; /* Bottom nav ke liye jagah */
+        }
+
+        /* Top Navigation */
+        .top-nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 40px;
+            padding: 15px 20px;
             border-bottom: 1px solid #262626;
-            position: fixed; top: 0; width: 100%; 
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 100;
+            position: sticky; top: 0; background: #000; z-index: 10;
         }
-        .top-header .brand { font-size: 1.5rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
-        .top-header .search-box { 
-            background: #262626; padding: 8px 15px; border-radius: 8px; 
-            display: flex; align-items: center; width: 300px; color: #a8a8a8;
-        }
-        .top-header .search-box input { background: transparent; border: none; outline: none; color: white; margin-left: 10px; width: 100%; }
-        .top-header .icons { display: flex; gap: 20px; cursor: pointer; }
+        .top-nav .username { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        .top-nav .icons { display: flex; gap: 20px; }
 
-        /* --- Main Layout --- */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 250px 1fr 350px; /* Left Nav, Center Feed, Right Profile */
-            max-width: 1200px;
-            margin: 80px auto 0; /* Header ke liye jagah */
-            gap: 30px;
-            padding: 20px;
-        }
-
-        /* --- 2. Left Navigation --- */
-        .left-nav {
-            position: sticky; top: 100px; height: fit-content;
-            display: flex; flex-direction: column; gap: 5px;
-        }
-        .nav-item {
-            display: flex; align-items: center; gap: 15px;
-            padding: 12px 15px; cursor: pointer; color: #a8a8a8; 
-            transition: 0.2s; text-decoration: none; border-radius: 8px;
-            font-size: 1.05rem; font-weight: 500;
-        }
-        .nav-item:hover { background: #1a1a1a; color: #fff; }
-        .nav-item.active { font-weight: 700; color: #fff; }
-
-        /* --- 3. Center Feed --- */
-        .center-feed { border-left: 1px solid #262626; border-right: 1px solid #262626; padding: 0 20px; min-height: 80vh; }
-        
-        /* Highlights */
-        .highlights { display: flex; gap: 20px; padding-bottom: 20px; overflow-x: auto; border-bottom: 1px solid #262626; }
-        .highlights::-webkit-scrollbar { display: none; }
-        .highlight-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
-        .highlight-circle {
-            width: 70px; height: 70px; border-radius: 50%; border: 2px solid #404040;
-            background: #1a1a1a; display: flex; justify-content: center; align-items: center;
-        }
-        .highlight-text { font-size: 0.8rem; font-weight: 500; }
-
-        /* Tabs */
-        .tabs { display: flex; border-bottom: 1px solid #262626; margin-top: 10px; }
-        .tab { flex: 1; text-align: center; padding: 15px 0; cursor: pointer; color: #a8a8a8; transition: 0.2s; }
-        .tab.active { color: #fff; border-bottom: 2px solid #fff; }
-
-        /* Job Feed Grid */
-        .feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 5px; }
-        .grid-item { aspect-ratio: 1; background: #1a1a1a; display: flex; justify-content: center; align-items: center; color: #a8a8a8; flex-direction: column; gap: 8px; transition: 0.2s; border-radius: 4px; }
-        .grid-item:hover { background: #262626; cursor: pointer; color: #fff; }
-
-        /* --- 4. Right Profile --- */
-        .right-profile {
-            position: sticky; top: 100px; height: fit-content;
-            background: #0a0a0a; border: 1px solid #262626; border-radius: 12px; padding: 25px;
+        /* Profile Header (Avatar + Stats) */
+        .profile-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 20px 10px;
         }
         .avatar-container {
-            width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 15px;
+            position: relative;
+            width: 86px; height: 86px;
+            border-radius: 50%;
             background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
             display: flex; justify-content: center; align-items: center;
         }
         .avatar {
-            width: 92px; height: 92px; border-radius: 50%; border: 3px solid #000;
+            width: 80px; height: 80px;
+            border-radius: 50%; border: 3px solid #000;
             background: #262626; display: flex; justify-content: center; align-items: center;
-            font-size: 2.5rem; font-weight: 700; color: #fff;
+            font-size: 2rem; font-weight: 700; color: #fff;
         }
-        
-        .right-profile h2 { text-align: center; font-size: 1.3rem; margin-bottom: 5px; }
-        .right-profile p.username { text-align: center; color: #a8a8a8; font-size: 0.9rem; margin-bottom: 20px; }
-        
-        .stats { display: flex; justify-content: space-around; text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #262626; }
-        .stat-item h3 { font-size: 1.2rem; font-weight: 700; }
-        .stat-item p { font-size: 0.85rem; color: #a8a8a8; }
+        .stats { display: flex; gap: 25px; text-align: center; }
+        .stat-item h3 { font-size: 1.1rem; font-weight: 700; }
+        .stat-item p { font-size: 0.85rem; color: #a8a8a8; margin-top: -2px; }
 
-        .bio-section { font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; color: #e5e5e5; }
-        .bio-section .category { color: #a8a8a8; margin-bottom: 10px; font-weight: 600; }
-        .bio-section a { color: #38bdf8; text-decoration: none; }
+        /* Bio Section */
+        .bio-section { padding: 0 20px 15px; font-size: 0.95rem; line-height: 1.4; }
+        .bio-section .name { font-weight: 700; margin-bottom: 2px; }
+        .bio-section .category { color: #a8a8a8; font-size: 0.85rem; margin-bottom: 4px; }
+        .bio-section .description a { color: #38bdf8; text-decoration: none; }
 
-        .action-buttons { display: flex; flex-direction: column; gap: 10px; }
-        .btn { padding: 10px 0; border-radius: 8px; background: #262626; color: #fff; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        /* Action Buttons */
+        .action-buttons { display: flex; gap: 10px; padding: 0 20px 20px; }
+        .btn {
+            flex: 1; padding: 8px 0; border-radius: 8px;
+            background: #262626; color: #fff; border: none;
+            font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+        }
         .btn:hover { background: #333; }
         .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
         .btn-logout:hover { background: #ef4444; color: #fff; }
 
+        /* Highlights / Stories */
+        .highlights {
+            display: flex; gap: 15px; padding: 0 20px 20px;
+            overflow-x: auto; border-bottom: 1px solid #262626;
+        }
+        .highlights::-webkit-scrollbar { display: none; }
+        .highlight-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .highlight-circle {
+            width: 64px; height: 64px; border-radius: 50%; border: 1px solid #404040;
+            background: #1a1a1a; display: flex; justify-content: center; align-items: center;
+        }
+        .highlight-text { font-size: 0.75rem; }
+
+        /* Content Tabs */
+        .tabs { display: flex; border-bottom: 1px solid #262626; }
+        .tab { 
+            flex: 1; text-align: center; padding: 12px 0; cursor: pointer; 
+            color: #a8a8a8; transition: 0.2s; 
+            display: flex; justify-content: center; align-items: center;
+        }
+        .tab.active { color: #fff; border-bottom: 2px solid #fff; }
+
+        /* Job Feed Grid */
+        .feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+        .grid-item { aspect-ratio: 1; background: #262626; display: flex; justify-content: center; align-items: center; color: #a8a8a8; font-size: 0.8rem; flex-direction: column; gap: 5px;}
+        .grid-item:hover { background: #333; cursor: pointer; }
+
+        /* Bottom Navigation (Aapke Order Mein) */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; max-width: 480px;
+            background: #000; border-top: 1px solid #262626;
+            display: flex; justify-content: space-around; padding: 12px 5px; z-index: 100;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            cursor: pointer; color: #a8a8a8; transition: 0.2s; text-decoration: none; flex: 1;
+        }
+        .nav-item.active { color: #fff; }
+        .nav-item span { font-size: 0.65rem; font-weight: 500; text-align: center; }
+        .nav-item:hover { color: #fff; transform: translateY(-2px); }
+
         /* Loader */
-        #loader { text-align: center; margin-top: 100px; color: #a8a8a8; font-size: 1.2rem; }
+        #loader { text-align: center; margin-top: 50px; color: #a8a8a8; }
         #dashboardContent { display: none; }
     </style>
 </head>
 <body>
 
-    <header class="top-header">
-        <div class="brand"><i data-lucide="briefcase" style="color: #38bdf8;"></i> JobGram</div>
-        <div class="search-box">
-            <i data-lucide="search" size="18"></i>
-            <input type="text" placeholder="Search jobs, skills...">
-        </div>
-        <div class="icons">
-            <i data-lucide="bell"></i>
-            <i data-lucide="message-circle"></i>
-        </div>
-    </header>
+    <div id="app-container">
+        <div id="loader">Loading your profile...</div>
 
-    <div id="loader">Loading your profile...</div>
+        <div id="dashboardContent">
+            <div class="top-nav">
+                <div class="username">
+                    <i data-lucide="lock" style="width: 14px; margin-right: 5px;"></i>
+                    <span id="navUsername">username</span>
+                    <i data-lucide="chevron-down" style="width: 16px;"></i>
+                </div>
+                <div class="icons">
+                    <i data-lucide="plus-square"></i>
+                    <i data-lucide="menu"></i>
+                </div>
+            </div>
 
-    <div id="dashboardContent" class="main-layout">
-        
-        <aside class="left-nav">
-            <a href="#" class="nav-item active">
-                <i data-lucide="compass"></i>
-                <span>Explore</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i data-lucide="briefcase"></i>
-                <span>Permanent</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i data-lucide="zap"></i>
-                <span>Adhoc</span>
-            </a>
-            <a href="#" class="nav-item" style="color: #38bdf8;">
-                <i data-lucide="map-pin"></i>
-                <span>Go to Job</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i data-lucide="database"></i>
-                <span>My Data</span>
-            </a>
-        </aside>
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <div class="avatar" id="userInitial">?</div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3 id="appliedJobs">0</h3>
+                        <p>Applied</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="profileViews">0</h3>
+                        <p>Views</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="savedJobs">0</h3>
+                        <p>Saved</p>
+                    </div>
+                </div>
+            </div>
 
-        <main class="center-feed">
+            <div class="bio-section">
+                <div class="name" id="userName">User Name</div>
+                <div class="category" id="userRole">Professional Role</div>
+                <div class="description">
+                    📍 <span id="userLocation">Location</span><br>
+                    ✉️ <span id="userEmail">email@example.com</span><br>
+                    Ready for new opportunities! 🚀<br>
+                    <a href="#">linktr.ee/portfolio</a>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn">Edit profile</button>
+                <button class="btn">Share profile</button>
+                <button class="btn btn-logout" onclick="logout()">Logout</button>
+            </div>
+
             <div class="highlights">
                 <div class="highlight-item">
                     <div class="highlight-circle"><i data-lucide="building"></i></div>
-                    <div class="highlight-text">Top MNCs</div>
+                    <div class="highlight-text">MNCs</div>
                 </div>
                 <div class="highlight-item">
                     <div class="highlight-circle"><i data-lucide="code"></i></div>
@@ -182,6 +203,7 @@
             <div class="tabs">
                 <div class="tab active"><i data-lucide="grid"></i></div>
                 <div class="tab"><i data-lucide="bookmark"></i></div>
+                <div class="tab"><i data-lucide="user-square"></i></div>
             </div>
 
             <div class="feed-grid">
@@ -192,46 +214,34 @@
                 <div class="grid-item"><i data-lucide="layout"></i><span>UI/UX</span></div>
                 <div class="grid-item"><i data-lucide="file-json"></i><span>API</span></div>
             </div>
-        </main>
+        </div>
 
-        <aside class="right-profile">
-            <div class="avatar-container">
-                <div class="avatar" id="userInitial">?</div>
-            </div>
-            
-            <h2 id="userName">User Name</h2>
-            <p class="username">@<span id="navUsername">username</span></p>
+        <div class="bottom-nav">
+            <a href="#" class="nav-item">
+                <i data-lucide="compass"></i>
+                <span>Explore</span>
+            </a>
 
-            <div class="stats">
-                <div class="stat-item">
-                    <h3 id="appliedJobs">0</h3>
-                    <p>Applied</p>
-                </div>
-                <div class="stat-item">
-                    <h3 id="profileViews">0</h3>
-                    <p>Views</p>
-                </div>
-                <div class="stat-item">
-                    <h3 id="savedJobs">0</h3>
-                    <p>Saved</p>
-                </div>
-            </div>
+            <a href="#" class="nav-item">
+                <i data-lucide="briefcase"></i>
+                <span>Permanent</span>
+            </a>
 
-            <div class="bio-section">
-                <div class="category" id="userRole">Professional Role</div>
-                📍 <span id="userLocation">Location</span><br>
-                ✉️ <span id="userEmail">email@example.com</span><br><br>
-                Ready for new opportunities! 🚀<br>
-                <a href="#">linktr.ee/portfolio</a>
-            </div>
+            <a href="#" class="nav-item">
+                <i data-lucide="zap"></i>
+                <span>Adhoc</span>
+            </a>
 
-            <div class="action-buttons">
-                <button class="btn">Edit Profile</button>
-                <button class="btn">Share Profile</button>
-                <button class="btn btn-logout" onclick="logout()">Logout</button>
-            </div>
-        </aside>
+            <a href="#" class="nav-item" style="color: #38bdf8;">
+                <i data-lucide="map-pin"></i>
+                <span>Go to Job</span>
+            </a>
 
+            <a href="#" class="nav-item active">
+                <i data-lucide="database"></i>
+                <span>My Data</span>
+            </a>
+        </div>
     </div>
 
     <script>
@@ -260,9 +270,9 @@
                     const user = data.user;
                     
                     document.getElementById('loader').style.display = 'none';
-                    document.getElementById('dashboardContent').style.display = 'grid'; // Grid display for layout
+                    document.getElementById('dashboardContent').style.display = 'block';
 
-                    const igUsername = user.name.toLowerCase().replace(/\s+/g, '_');
+                    const igUsername = user.name.toLowerCase().replace(/\s+/g, '_') + '_official';
                     document.getElementById('navUsername').innerText = igUsername;
                     
                     document.getElementById('userName').innerText = user.name;
