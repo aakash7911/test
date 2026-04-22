@@ -3,95 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobPortal | Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>JobPortal | Pro Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #0f172a; color: #f8fafc; display: flex; }
         
-        /* Sidebar */
-        .sidebar { width: 250px; height: 100vh; background: #1e293b; padding: 30px 20px; border-right: 1px solid #334155; }
-        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 50px; font-weight: 700; color: #38bdf8; font-size: 1.2rem; }
-        .logo-icon { width: 35px; height: 35px; background: #38bdf8; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #0f172a; }
-        .nav-link { display: block; padding: 12px 15px; color: #cbd5e1; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; }
-        .nav-link:hover, .nav-link.active { background: #38bdf8; color: #0f172a; font-weight: 600; }
+        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+
+        /* --- Top Header --- */
+        .top-header {
+            height: 70px; width: 100%;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; position: fixed; top: 0; z-index: 100;
+        }
+        .logo-container { display: flex; align-items: center; gap: 12px; font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+        .logo-box { background: var(--primary); color: var(--bg-dark); width: 35px; height: 35px; display: flex; justify-content: center; align-items: center; border-radius: 8px; font-weight: 800; }
         
-        /* Main Content */
-        .main-content { flex: 1; padding: 50px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .header h1 { font-size: 2rem; font-weight: 700; }
-        .logout-btn { padding: 10px 20px; background: transparent; border: 1px solid #ef4444; color: #ef4444; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .logout-btn:hover { background: #ef4444; color: white; }
+        .header-search { display: flex; align-items: center; background: var(--bg-dark); border: 1px solid var(--border); padding: 8px 15px; border-radius: 20px; width: 300px; }
+        .header-search input { background: transparent; border: none; outline: none; color: white; margin-left: 10px; width: 100%; }
+        
+        .header-actions { display: flex; gap: 20px; align-items: center; color: var(--text-muted); }
+        .header-actions i { cursor: pointer; transition: 0.2s; }
+        .header-actions i:hover { color: var(--primary); }
 
-        /* Profile Card */
-        .profile-card { background: #1e293b; padding: 30px; border-radius: 16px; display: flex; align-items: center; gap: 30px; border: 1px solid #334155; }
-        .avatar { width: 100px; height: 100px; border-radius: 50%; background: #38bdf8; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; color: #0f172a; font-weight: bold; }
-        .details h2 { font-size: 1.8rem; margin-bottom: 5px; }
-        .details p { color: #94a3b8; font-size: 1rem; margin-bottom: 5px; }
-        .badge { display: inline-block; padding: 5px 12px; background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-radius: 20px; font-size: 0.85rem; margin-top: 10px; }
+        /* --- Main Layout Grid --- */
+        .layout-container {
+            display: grid;
+            grid-template-columns: 240px 1fr 320px; /* Left Nav, Center, Right Profile */
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 30px 30px; /* Top padding header ke liye */
+        }
 
-        /* Stats Container */
-        .stats { display: flex; gap: 20px; margin-top: 30px; }
-        .stat-box { flex: 1; background: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #334155; text-align: center; }
-        .stat-box h3 { font-size: 2.5rem; color: #38bdf8; margin-bottom: 5px; }
-        .stat-box p { color: #94a3b8; font-size: 0.9rem; }
+        /* --- Left Navigation --- */
+        .left-nav { display: flex; flex-direction: column; gap: 10px; position: sticky; top: 100px; }
+        .nav-btn {
+            display: flex; align-items: center; gap: 15px;
+            padding: 14px 20px; border-radius: 12px;
+            color: var(--text-muted); text-decoration: none;
+            font-weight: 500; font-size: 1.05rem; transition: 0.3s;
+        }
+        .nav-btn:hover { background: rgba(56, 189, 248, 0.1); color: var(--primary); transform: translateX(5px); }
+        .nav-btn.active { background: var(--primary); color: var(--bg-dark); font-weight: 600; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
+
+        /* --- Center Content --- */
+        .center-content { background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); padding: 30px; min-height: 80vh; }
+        .welcome-box h1 { font-size: 2rem; margin-bottom: 5px; }
+        .welcome-box p { color: var(--text-muted); margin-bottom: 30px; }
+        
+        .feed-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .job-card { background: var(--bg-dark); padding: 20px; border-radius: 15px; border: 1px solid var(--border); transition: 0.3s; }
+        .job-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .job-card h3 { font-size: 1.1rem; margin-bottom: 10px; }
+        .job-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; }
+        .tag { background: rgba(56, 189, 248, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; }
+
+        /* --- Right Profile Section --- */
+        .right-profile { position: sticky; top: 100px; }
+        .profile-card { background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); padding: 30px 20px; text-align: center; }
+        
+        .avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #818cf8);
+            margin: 0 auto 15px; display: flex; justify-content: center; align-items: center;
+            font-size: 2.5rem; color: white; font-weight: bold;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+        
+        .profile-card h2 { font-size: 1.4rem; margin-bottom: 5px; }
+        .profile-card p.role { color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-bottom: 5px; }
+        .profile-card p.location { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .stat-box { background: var(--bg-dark); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .stat-box h4 { font-size: 1.5rem; color: var(--text-main); }
+        .stat-box span { font-size: 0.8rem; color: var(--text-muted); }
+
+        .btn-outline { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--border); color: var(--text-main); border-radius: 8px; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .btn-logout { width: 100%; padding: 10px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn-logout:hover { background: #ef4444; color: white; }
+
+        /* Loader */
+        #loader { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--primary); font-size: 1.2rem; }
+        #dashboardContent { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="brand">
-            <div class="logo-icon">JP</div> JobPortal
-        </div>
-        <a href="#" class="nav-link active">Dashboard</a>
-        <a href="#" class="nav-link">My Applications</a>
-        <a href="#" class="nav-link">Saved Jobs</a>
-        <a href="#" class="nav-link">Settings</a>
-    </div>
+    <div id="loader">Fetching your profile securely...</div>
 
-    <div class="main-content">
-        <div class="header">
-            <h1 id="welcomeText">Loading...</h1>
-            <button class="logout-btn" onclick="logout()">Logout</button>
-        </div>
+    <div id="dashboardContent">
+        <header class="top-header">
+            <div class="logo-container">
+                <div class="logo-box">JP</div> JobPortal
+            </div>
+            <div class="header-search">
+                <i data-lucide="search" size="18"></i>
+                <input type="text" placeholder="Search jobs, skills, or companies...">
+            </div>
+            <div class="header-actions">
+                <i data-lucide="bell"></i>
+                <i data-lucide="message-square"></i>
+            </div>
+        </header>
 
-        <div class="profile-card">
-            <div class="avatar" id="userInitial">?</div>
-            <div class="details">
-                <h2 id="userName">Loading Name...</h2>
-                <p id="userEmail">Loading Email...</p>
-                <p id="userLocation">📍 Loading Location...</p>
-                <div class="badge" id="userRole">Loading Role...</div>
-            </div>
-        </div>
+        <div class="layout-container">
+            
+            <aside class="left-nav">
+                <a href="#" class="nav-btn active">
+                    <i data-lucide="compass"></i> Explore
+                </a>
+                <a href="#" class="nav-btn">
+                    <i data-lucide="briefcase"></i> Permanent
+                </a>
+                <a href="#" class="nav-btn">
+                    <i data-lucide="zap"></i> Adhoc
+                </a>
+                <a href="#" class="nav-btn">
+                    <i data-lucide="map-pin"></i> Map (Go to Job)
+                </a>
+                <a href="#" class="nav-btn">
+                    <i data-lucide="database"></i> My Data
+                </a>
+            </aside>
 
-        <div class="stats">
-            <div class="stat-box">
-                <h3 id="appliedJobs">0</h3>
-                <p>Jobs Applied</p>
-            </div>
-            <div class="stat-box">
-                <h3 id="profileViews">0</h3>
-                <p>Profile Views</p>
-            </div>
-            <div class="stat-box">
-                <h3 id="savedJobs">0</h3>
-                <p>Saved Jobs</p>
-            </div>
+            <main class="center-content">
+                <div class="welcome-box">
+                    <h1 id="welcomeText">Welcome back!</h1>
+                    <p>Here are the latest opportunities based on your skills.</p>
+                </div>
+
+                <div class="feed-grid">
+                    <div class="job-card">
+                        <h3>Full Stack Developer</h3>
+                        <p>TechCorp India • Remote</p>
+                        <span class="tag">Permanent</span>
+                    </div>
+                    <div class="job-card">
+                        <h3>Backend Engineer (Node.js)</h3>
+                        <p>InnovateX • Bangalore</p>
+                        <span class="tag">Adhoc</span>
+                    </div>
+                    <div class="job-card">
+                        <h3>Frontend Developer</h3>
+                        <p>DesignStudio • Agra</p>
+                        <span class="tag">Permanent</span>
+                    </div>
+                    <div class="job-card">
+                        <h3>UI/UX Designer</h3>
+                        <p>Global Solutions • Remote</p>
+                        <span class="tag">Adhoc</span>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="right-profile">
+                <div class="profile-card">
+                    <div class="avatar" id="userInitial">?</div>
+                    <h2 id="userName">User Name</h2>
+                    <p class="role" id="userRole">Role</p>
+                    <p class="location">📍 <span id="userLocation">Location</span></p>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <h4 id="appliedJobs">0</h4>
+                            <span>Applied</span>
+                        </div>
+                        <div class="stat-box">
+                            <h4 id="savedJobs">0</h4>
+                            <span>Saved</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-outline">Edit Profile</button>
+                    <button class="btn-outline">My Resume</button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </aside>
+
         </div>
     </div>
 
     <script>
-        // Check if user is logged in
+        lucide.createIcons();
+
+        // Asli Live Backend URL
+        const BACKEND_URL = "https://faa-qep3.onrender.com"; 
+        
         const token = localStorage.getItem('userToken');
         if (!token) {
-            window.location.href = 'index.html'; // Token nahi hai to wapas login par bhejo
+            window.location.href = 'index.html'; 
         }
 
-        // Fetch User Data from Backend
         async function fetchUserData() {
             try {
-                const response = await fetch('https://faa-qep3.onrender.com/api/profile', {
+                const response = await fetch(`${BACKEND_URL}/api/profile`, {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -100,22 +222,24 @@
 
                 if (data.success) {
                     const user = data.user;
-                    // Update the UI with real data
-                    document.getElementById('welcomeText').innerText = `Welcome, ${user.name.split(' ')[0]}! 👋`;
+                    
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('dashboardContent').style.display = 'block';
+
+                    document.getElementById('welcomeText').innerText = `Hello, ${user.name.split(' ')[0]}! 👋`;
                     document.getElementById('userName').innerText = user.name;
-                    document.getElementById('userEmail').innerText = user.email;
-                    document.getElementById('userLocation').innerText = `📍 ${user.location}`;
+                    document.getElementById('userLocation').innerText = user.location;
                     document.getElementById('userRole').innerText = user.role;
-                    document.getElementById('userInitial').innerText = user.name.charAt(0);
+                    document.getElementById('userInitial').innerText = user.name.charAt(0).toUpperCase();
                     
                     document.getElementById('appliedJobs').innerText = user.stats.applied;
-                    document.getElementById('profileViews').innerText = user.stats.views;
                     document.getElementById('savedJobs').innerText = user.stats.saved;
                 } else {
-                    logout(); // Agar token invalid hai
+                    logout();
                 }
             } catch (error) {
-                console.error("Error fetching profile:", error);
+                console.error("Data load failed:", error);
+                document.getElementById('loader').innerText = "Network Error. Please check your connection.";
             }
         }
 
@@ -124,7 +248,6 @@
             window.location.href = 'index.html';
         }
 
-        // Load data when page opens
         fetchUserData();
     </script>
 </body>
